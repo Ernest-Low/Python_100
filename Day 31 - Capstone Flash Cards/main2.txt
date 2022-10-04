@@ -1,0 +1,69 @@
+from tkinter import *
+import pandas
+import random
+
+
+#   Constants
+BACKGROUND_COLOR = "#B1DDC6"
+
+#   Convert csv to dict
+data = pandas.read_csv("./data/french_words.csv")
+data_dict = data.to_dict(orient = "records")
+
+#   Function to show a new card (random, non repeated)
+def random_card () :
+    current_card = random.choice(data_dict)
+    print(current_card)
+    card_canv.itemconfig(image_container, image = card_img_front)
+    card_canv.itemconfig(card_title, text = "French")
+    card_canv.itemconfig(card_word, text = current_card["French"])
+    
+    
+    
+    
+    print(current_card["French"])
+    # window.after(5000, reveal_card)
+
+
+# #   Reveal card
+# def reveal_card () :
+#     global random_card
+#     card_canv.create_image(400, 263, image = card_img_back)
+#     card_canv.itemconfig(card_title, text = "English", fill = "white", font = ("Arial", 40, "italic"))
+#     card_canv.itemconfig(card_word, text = current_card["English"], fill = "black", font = ("Arial", 60, "bold"))
+
+
+#   Function to add card to known
+def right_press () :
+    random_card()
+
+#   Window
+window = Tk()
+window.title("Flash Cards")
+window.config(padx = 50, pady = 50, bg = BACKGROUND_COLOR)
+
+#   Frame for card canvas
+frame = Frame(window)
+frame.grid(column = 0, row = 0, columnspan= 2)
+
+#   Card Canvas Image
+card_canv = Canvas(frame, width = 800, height = 526, highlightthickness = 0, bg = BACKGROUND_COLOR)
+card_img_front = PhotoImage(file = "./images/card_front.png")
+# card_img_back = PhotoImage(file = "./images/card_back.png")
+image_container = card_canv.create_image(400, 263, image = card_img_front)
+card_title = card_canv.create_text(400, 150, text = "Welcome", fill = "black", font = ("Arial", 30, "italic"))
+card_word = card_canv.create_text(400, 263, text = "Press a button to start", fill = "black", font = ("Arial", 30, "bold"))
+card_canv.grid(column = 0, row = 0)
+
+#   Right Button
+right_img = PhotoImage(file = "./images/right.png")
+right_button = Button(image = right_img, bg = BACKGROUND_COLOR, borderwidth = 0, command = right_press)
+right_button.grid(column = 1, row = 1)
+
+#   Wrong Button
+wrong_img = PhotoImage(file = "./images/wrong.png")
+wrong_button = Button(image = wrong_img, bg = BACKGROUND_COLOR, borderwidth = 0, command = random_card)
+wrong_button.grid(column = 0, row = 1)
+
+
+window.mainloop()
